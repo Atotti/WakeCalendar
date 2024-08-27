@@ -2,7 +2,7 @@ import dataclasses
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
 from crontab import CronTab
@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from pytz import timezone
+from tzlocal import get_localzone
 
 load_dotenv()
 
@@ -119,19 +120,18 @@ def get_script_path() -> str:
 
 def get_start_datetime(event: Event) -> Tuple[datetime, str]:
     """Get the start datetime and timezone of the event."""
-    date_time = event.start.get("dateTime")
-    time_zone = event.start.get("timeZone")
+    date_time = event.get('start').get('dateTime')
+    time_zone = event.get('start').get("timeZone")
     dt = parser.isoparse(date_time)
     return dt, time_zone
 
 
 def convert_to_system_timezone(dt: datetime, calendar_tz_str: str) -> datetime:
     """Convert the datetime to the system timezone."""
-    system_tz = time.tzname[0]
     calendar_tz = timezone(calendar_tz_str)
     local_dt = dt.astimezone(calendar_tz)
 
-    system_timezone = timezone(system_tz)
+    system_timezone = get_localzone()
     system_time = local_dt.astimezone(system_timezone)
     return system_time
 
