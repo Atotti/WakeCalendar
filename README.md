@@ -8,6 +8,8 @@ This is a application that set alarms for you based on google calendar events.
 You can set your alarm on google calendar like this:
 ![image](https://github.com/user-attachments/assets/772b5046-bf28-44ec-adae-a3fb6eb900d4)
 
+And you can stop alarm to acces {raspberry pi ipadress}:5000/stop
+
 ## How to use
 
 If you use this application, you need to get google service account key file at Google Cloud Console.
