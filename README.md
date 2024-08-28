@@ -1,5 +1,7 @@
 # Wake Calendar
 
+Googleカレンダーから目覚ましをセットするアプリケーションです。
+
 This is a application that set alarms for you based on google calendar events.
 
 ## How to use

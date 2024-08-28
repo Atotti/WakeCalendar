@@ -11,12 +11,13 @@ def get_audio_device():
 
     # スピーカーやヘッドホンに関連するデバイスを探す
     devices = []
-    pattern = re.compile(r'card (\d+): .*, device (\d+):.*(Speaker|Headphones)', re.IGNORECASE)
+    pattern = re.compile(r'card (\d+): .*, device (\d+):.*\[(.*)\]', re.IGNORECASE)
     
     for line in output.splitlines():
         match = pattern.search(line)
         if match:
-            card, device = match.groups()
+            card, device, *name = match.groups()
+            print(card, device, name)
             devices.append((int(card), int(device)))
     
     # 最初に見つかったスピーカーやヘッドホンのデバイスを使用
