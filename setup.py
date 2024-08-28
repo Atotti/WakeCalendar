@@ -1,6 +1,6 @@
 import os
 from crontab import CronTab
-from main import get_file_path
+from main import get_file_path, main
 
 
 def set_cron_job():
@@ -20,3 +20,4 @@ def set_cron_job():
 if __name__ == "__main__":
     set_cron_job()
     print("Cron job set successfully.")
+    main()
