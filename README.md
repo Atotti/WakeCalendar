@@ -5,6 +5,9 @@ Googleカレンダーから目覚ましをセットするアプリケーショ�
 
 This is a application that set alarms for you based on google calendar events.
 
+You can set your alarm on google calendar like this:
+![image](https://github.com/user-attachments/assets/772b5046-bf28-44ec-adae-a3fb6eb900d4)
+
 ## How to use
 
 If you use this application, you need to get google service account key file at Google Cloud Console.
@@ -42,8 +45,6 @@ WakeCalendar
 
 In this application you can set your own alarm sound file (mp3). You can place it in the music directory.
 If you don't have any sound file, you can use the default sound file.
-
-And you can set your alarm on google calendar like this:
 
 ### Requirements
 
