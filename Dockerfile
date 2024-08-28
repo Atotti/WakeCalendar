@@ -11,9 +11,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+COPY . /app/
 
 
-RUN python setup.py 
-
-CMD ["sh", "-c", "cron && tail -f /dev/null"]
+CMD ["sh", "-c", "python setup.py && cron && tail -f /dev/null"]

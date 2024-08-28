@@ -16,3 +16,4 @@ def set_cron_job():
 
 if __name__ == "__main__":
     set_cron_job()
+    print("Cron job set successfully.")

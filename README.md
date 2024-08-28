@@ -3,13 +3,13 @@
 ## Build
 
 ```bash
-docker build --no-cache -t my-alarm-app .
+docker build -t wake-calendar .
 ```
 
 ## Run
 
 ```bash
-docker run -d -v /path/to/host/directory:/app/data wake-calendar
+docker run -d -v /path/to/host/directory:/app/data wake-calendar:latest
 ```
 
 ## Auto Restart
