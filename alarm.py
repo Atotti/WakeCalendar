@@ -56,5 +56,5 @@ def play_random_alarm(music_directory):
 
 if __name__ == "__main__":
     music_directory = get_file_path("music")
-    play_random_alarm(music_directory)
+    process = play_random_alarm(music_directory)
 
