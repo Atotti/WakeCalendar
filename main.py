@@ -4,6 +4,7 @@ import os
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
+import logging
 
 from crontab import CronTab
 from dateutil import parser
@@ -14,6 +15,24 @@ from pytz import timezone
 from tzlocal import get_localzone
 
 load_dotenv()
+
+EVENT_KEYWORD = ["起床", "アラーム", "Alarm", "wake", "WAKE", "Wake", "きしょう", "起きる"]
+
+# logging settings
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("app.log"),
+                        logging.StreamHandler()
+                    ])
+
+# logger
+logger = logging.getLogger(__name__)
+
+# data directory
+data_directory = "/app/data"
+os.makedirs(data_directory, exist_ok=True)
+schedule_file_path = os.path.join(data_directory, "alarm_schedule.json")
 
 
 @dataclasses.dataclass
@@ -65,8 +84,10 @@ def get_events(service) -> List[Event]:
 
 
 def get_alarm_events(events: List[Event]) -> List[Event]:
-    """Get all events with '起床' in the summary."""
-    alarm_events = [event for event in events if "起床" in event.summary]
+    """Get all events with `EVENT_KEYWORD` in the summary."""
+    alarm_events = []
+    for keyword in EVENT_KEYWORD:
+        alarm_events += [event for event in events if keyword in event.summary]
     return alarm_events
 
 
@@ -77,10 +98,10 @@ def get_event_dict(events: List[Event]) -> Dict[str, Event]:
 
 
 def update_json_alarm_schedule(events: Dict[str, Event]) -> Optional[Dict[str, Event]]:
-    """Update alarm_schedule.json with the alarm event and return the updated data."""
+    """Update data/alarm_schedule.json with the alarm event and return the updated data."""
     active_events = set(id for id, event in events.items())
     try:
-        with open("alarm_schedule.json", "r") as json_file:
+        with open(schedule_file_path, "r") as json_file:
             data = json.load(json_file)
 
         # Remove the alarm event that is not active
@@ -92,22 +113,22 @@ def update_json_alarm_schedule(events: Dict[str, Event]) -> Optional[Dict[str, E
         for event_id, event in events.items():
             data[event_id] = dataclasses.asdict(event)
 
-        with open("alarm_schedule.json", "w") as json_file:
+        with open(schedule_file_path, "w") as json_file:
             json.dump(data, json_file, indent=4)
         return data
 
     except FileNotFoundError:
-        print("alarm_schedule.json not found, creating a new one.")
+        logger.info("data/alarm_schedule.json not found, creating a new one.")
         data = {
             event_id: dataclasses.asdict(event) for event_id, event in events.items()
         }
-        with open("alarm_schedule.json", "w") as json_file:
+        with open(schedule_file_path, "w") as json_file:
             json.dump(data, json_file, indent=4, default=str)
-        print(data)
-        return None
+        logger.debug(data)
+        return data
 
     except Exception as e:
-        print(f"Error reading alarm_schedule.json: {e}")
+        logger.error(f"Error reading data/alarm_schedule.json: {e}")
         return None
 
 
@@ -138,7 +159,7 @@ def convert_to_system_timezone(dt: datetime, calendar_tz_str: str) -> datetime:
 
 def set_cron_job(alarm_time: datetime):
     """Set a cron job to run the alarm script at the specified time."""
-    cron = CronTab(user=True)  # ユーザーのcrontabにアクセス
+    cron = CronTab(user=True)  # Create a new cron job
     job = cron.new(command=f"/usr/bin/python3 {get_script_path()}")
 
     # `alarm_time`から時刻を設定
@@ -168,7 +189,7 @@ def set_all_cron_jobs(events: Dict[str, Event]):
         set_cron_job(alarm_datetime_system)
 
 
-if __name__ == "__main__":
+def main():
     # Google Calendar APIからイベントを取得
     service = get_service()
     events = get_events(service)
@@ -176,7 +197,7 @@ if __name__ == "__main__":
     # イベントからアラームイベントを取得
     alarm_events = get_alarm_events(events)
 
-    # jsonイベントをjsonに保存
+    # json登録用に辞書に変換
     alarm_events_dict = get_event_dict(alarm_events)
     # jsonと比較してイベントを更新
     updated_alarm_events = update_json_alarm_schedule(alarm_events_dict)
@@ -186,4 +207,7 @@ if __name__ == "__main__":
     remove_cron_jobs()
     # 更新されたアラームイベントを再設定
     set_all_cron_jobs(updated_alarm_events)
-    print("Cron jobs set.")
+    logger.info("Cron jobs set.")
+
+if __name__ == "__main__":
+    main()
