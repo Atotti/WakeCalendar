@@ -3,8 +3,11 @@ import os
 import random
 from main import get_file_path
 import re
+from flask import Flask, request
 
 process = None # 音楽再生プロセスを保持する変数
+
+app = Flask(__name__)
 
 def get_audio_device():
     # `aplay -l`の出力を取得
@@ -54,7 +57,25 @@ def play_random_alarm(music_directory):
     else:
         print("MP3 files not found in the music directory.")
 
+def shutdown_server():
+    """Flaskアプリケーションを終了させるための関数"""
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/stop', methods=['GET'])
+def stop():
+    global process
+    if process and process.poll() is None:  # プロセスが実行中かチェック
+        process.terminate()  # プロセスを停止
+        process.wait()  # プロセスが完全に終了するのを待つ
+        process = None # プロセスをリセット
+        shutdown_server()  # Flaskアプリケーションを終了
+        return "Music stopped."
+    return "No music is playing."
+
 if __name__ == "__main__":
     music_directory = get_file_path("music")
     process = play_random_alarm(music_directory)
-
+    app.run(host='0.0.0.0', port=5000)
