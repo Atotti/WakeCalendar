@@ -3,7 +3,7 @@ import os
 import random
 from main import get_file_path
 import re
-from flask import Flask, request
+from flask import Flask, request, Response
 
 process = None # 音楽再生プロセスを保持する変数
 
@@ -71,8 +71,10 @@ def stop():
         process.terminate()  # プロセスを停止
         process.wait()  # プロセスが完全に終了するのを待つ
         process = None # プロセスをリセット
-        shutdown_server()  # Flaskアプリケーションを終了
-        return "Music stopped."
+        
+        response = Response("Music stopped and server shutting down.", mimetype='text/plain')
+        response.call_on_close(shutdown_server)  # レスポンスがクライアントに送信された後にサーバーをシャットダウン
+        return response
     return "No music is playing."
 
 if __name__ == "__main__":
