@@ -72,6 +72,7 @@ def after_function_shutdown(func):
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)  # 元の関数を実行
         shutdown_server()  # 関数実行後にサーバーをシャットダウン
+        sys.exit(0)  # サーバーがシャットダウンした後にプロセスを終了
         return result
     return wrapper
 
@@ -91,3 +92,4 @@ if __name__ == "__main__":
     music_directory = get_file_path("music")
     process = play_random_alarm(music_directory)
     app.run(host='0.0.0.0', port=5000)
+
