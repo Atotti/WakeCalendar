@@ -4,6 +4,8 @@ import random
 from main import get_file_path
 import re
 from flask import Flask, request, Response
+from functools import wraps
+import sys
 
 process = None # 音楽再生プロセスを保持する変数
 
@@ -64,7 +66,17 @@ def shutdown_server():
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
 
+def after_function_shutdown(func):
+    """元の関数が実行された後にFlaskサーバーをシャットダウンするデコレータ"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)  # 元の関数を実行
+        shutdown_server()  # 関数実行後にサーバーをシャットダウン
+        return result
+    return wrapper
+
 @app.route('/stop', methods=['GET'])
+@after_function_shutdown
 def stop():
     global process
     if process and process.poll() is None:  # プロセスが実行中かチェック
@@ -72,9 +84,7 @@ def stop():
         process.wait()  # プロセスが完全に終了するのを待つ
         process = None # プロセスをリセット
         
-        response = Response("Music stopped and server shutting down.", mimetype='text/plain')
-        response.call_on_close(shutdown_server)  # レスポンスがクライアントに送信された後にサーバーをシャットダウン
-        return response
+        return "Music stopped and server shutting down."
     return "No music is playing."
 
 if __name__ == "__main__":
