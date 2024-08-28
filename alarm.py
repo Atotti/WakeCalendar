@@ -20,7 +20,7 @@ def get_audio_device():
             print("Connected Audio Devices: ", card, device, name)
             for n in name:
                 if 'speaker' in n.lower() or 'headphone' in n.lower():
-                    devices.append((int(card), int(device)))
+                    devices.append((int(card), int(device)), name)
                     break
     
     # 最初に見つかったスピーカーやヘッドホンのデバイスを使用
