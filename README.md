@@ -75,7 +75,7 @@ Requires=docker.service
 [Service]
 Restart=always
 ExecStart=/usr/bin/docker run --rm --device /dev/snd:/dev/snd -v {/path/to/host/directory}:/app/data wake-calendar:latest
-ExecStop=/usr/bin/docker stop %n
+ExecStop=/usr/bin/docker stop wake-calendar
 
 [Install]
 WantedBy=multi-user.target
