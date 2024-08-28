@@ -1,12 +1,16 @@
 # Wake Calendar
 
 Googleカレンダーから目覚ましをセットするアプリケーションです。
+目覚ましをかけ忘れて遅刻したので、作りました。
 
 This is a application that set alarms for you based on google calendar events.
 
 ## How to use
 
-If you use this application, you need to get google service account key file. And place it in the application directory as `credentials.json`.
+If you use this application, you need to get google service account key file at Google Cloud Console.
+Don't forget to enable the Google Calendar API to service account. And you need to share your calendar with the service account in google calendar setting.
+
+Please place it in the application directory as `credentials.json`.
 And you need to set `.env` file. This file should contain the following:
 
 ```env
