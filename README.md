@@ -12,6 +12,7 @@ Don't forget to enable the Google Calendar API to service account. And you need 
 
 Please place it in the application directory as `credentials.json`.
 And you need to set `.env` file. This file should contain the following:
+![image](https://github.com/user-attachments/assets/772b5046-bf28-44ec-adae-a3fb6eb900d4)
 
 ```env
 CALENDAR_ID=your_calendar_id
