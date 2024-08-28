@@ -1,6 +1,7 @@
 import subprocess
 import os
 import random
+from main import get_file_path
 
 def play_random_alarm(music_directory):
     # Get all mp3 files in the music directory
@@ -17,5 +18,5 @@ def play_random_alarm(music_directory):
         print("MP3 files not found in the music directory.")
 
 if __name__ == "__main__":
-    music_directory = "./music"
+    music_directory = get_file_path("music")
     play_random_alarm(music_directory)

@@ -1,31 +1,62 @@
 # Wake Calendar
 
 This is a application that set alarms for you based on google calendar events.
+
+## How to use
+
 If you use this application, you need to get google service account key file. And place it in the application directory as `credentials.json`.
+And you need to set `.env` file. This file should contain the following:
+
+```env
+CALENDAR_ID=your_calendar_id
+```
+
+Usually, the calendar id is your gmail address. You can find it in the google calendar settings.
+
+```tree
+WakeCalendar
+|   .dockerignore
+|   .env
+|   .gitignore
+|   alarm.py
+|   alarm_schedule.json
+|   credentials.json
+|   Dockerfile
+|   main.py
+|   README.md
+|   requirements.txt
+|   setup.py
+|   
++---.github
+|       dependabot.yml
+|       
+\---music
+        sample.mp3
+```
 
 In this application you can set your own alarm sound file (mp3). You can place it in the music directory.
 If you don't have any sound file, you can use the default sound file.
 
 And you can set your alarm on google calendar like this:
 
-## Requirements
+### Requirements
 
 - This application is intended to run on a Raspberry Pi with a speaker connected to it.
 - Docker
 
-## Build
+### Build
 
 ```bash
 docker build -t wake-calendar .
 ```
 
-## Run
+### Run
 
 ```bash
 docker run -d --rm --device /dev/snd:/dev/snd -v /path/to/host/directory:/app/data wake-calendar:latest
 ```
 
-## Auto Restart
+### Auto Restart
 
 I recommend using systemd to auto restart the container in case of a crash. Here is an example service file:
 
