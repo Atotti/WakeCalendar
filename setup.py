@@ -1,7 +1,6 @@
 import os
 from crontab import CronTab
 from main import get_file_path, main
-from rcon import app
 
 
 def set_cron_job():
