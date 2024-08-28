@@ -60,7 +60,7 @@ docker build -t wake-calendar .
 ### Run
 
 ```bash
-docker run -d --rm --device /dev/snd:/dev/snd -v /path/to/host/directory:/app/data wake-calendar:latest
+docker run -d --rm -p 5000:5000 --device /dev/snd:/dev/snd -v /path/to/host/directory:/app/data wake-calendar:latest
 ```
 
 ### Auto Restart
@@ -75,7 +75,7 @@ Requires=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker run --rm --device /dev/snd:/dev/snd -v {/path/to/host/directory}:/app/data wake-calendar:latest
+ExecStart=/usr/bin/docker run --rm  -p 5000:5000 --device /dev/snd:/dev/snd -v {/path/to/host/directory}:/app/data wake-calendar:latest
 ExecStop=/usr/bin/docker stop wake-calendar
 
 [Install]

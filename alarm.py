@@ -4,6 +4,8 @@ import random
 from main import get_file_path
 import re
 
+process = None # 音楽再生プロセスを保持する変数
+
 def get_audio_device():
     # `aplay -l`の出力を取得
     result = subprocess.run(['aplay', '-l'], capture_output=True, text=True)
@@ -46,10 +48,13 @@ def play_random_alarm(music_directory):
         
         # Play the random mp3 file
         command = ["mpg123", "-a", device, os.path.join(music_directory, music_path)]
-        subprocess.run(command)
+        global process
+        procces = subprocess.Popen(command)
+        return procces
     else:
         print("MP3 files not found in the music directory.")
 
 if __name__ == "__main__":
     music_directory = get_file_path("music")
     play_random_alarm(music_directory)
+

@@ -7,3 +7,4 @@ python-dotenv
 python-crontab
 pytz
 tzlocal
+flask
