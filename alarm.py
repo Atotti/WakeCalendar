@@ -13,7 +13,7 @@ def play_random_alarm(music_directory):
         music_path = os.path.join(music_directory, random_music_file)
         
         # Play the random mp3 file
-        command = ["mpg123", "-a", "hw:0,0", os.path.join(music_directory, music_path)]
+        command = ["mpg123", "-a", "hw:2,0", os.path.join(music_directory, music_path)]
         subprocess.run(command)
     else:
         print("MP3 files not found in the music directory.")
