@@ -16,4 +16,4 @@ COPY . /app
 
 RUN python setup.py 
 
-CMD cron && tail -f /dev/null
+CMD ["sh", "-c", "cron && tail -f /dev/null"]
