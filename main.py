@@ -161,7 +161,8 @@ def convert_to_system_timezone(dt: datetime, calendar_tz_str: str) -> datetime:
 def set_cron_job(alarm_time: datetime):
     """Set a cron job to run the alarm script at the specified time."""
     cron = CronTab(user=True)  # Create a new cron job
-    job = cron.new(command=f"/usr/local/bin/python3 {get_file_path("alarm.py")} >> /proc/1/fd/1 2>> /proc/1/fd/2")
+    script_path = get_file_path("alarm.py")
+    job = cron.new(command=f"/usr/local/bin/python3 {script_path} >> /proc/1/fd/1 2>> /proc/1/fd/2")
 
     # `alarm_time`から時刻を設定
     job.minute.on(alarm_time.minute)
@@ -176,7 +177,8 @@ def set_cron_job(alarm_time: datetime):
 def remove_cron_jobs():
     """Remove all cron jobs that run the alarm script."""
     cron = CronTab(user=True)
-    cron.remove_all(command=f"/usr/local/bin/python3 {get_file_path()} >> /proc/1/fd/1 2>> /proc/1/fd/2")
+    script_path = get_file_path("alarm.py")
+    cron.remove_all(command=f"/usr/local/bin/python3 {script_path} >> /proc/1/fd/1 2>> /proc/1/fd/2")
     cron.write()
 
 
