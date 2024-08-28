@@ -17,12 +17,16 @@ def get_audio_device():
         match = pattern.search(line)
         if match:
             card, device, *name = match.groups()
-            print(card, device, name)
-            devices.append((int(card), int(device)))
+            print("Connected Audio Devices: ", card, device, name)
+            for n in name:
+                if 'speaker' in n.lower() or 'headphone' in n.lower():
+                    devices.append((int(card), int(device)))
+                    break
     
     # 最初に見つかったスピーカーやヘッドホンのデバイスを使用
     if devices:
-        card, device = devices[0]
+        card, device, name = devices[0]
+        print("Selected Audio Device: ", card, device, name)
         return f'hw:{card},{device}'
     
     # 見つからない場合はデフォルトのデバイスを使用
