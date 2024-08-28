@@ -47,9 +47,10 @@ def get_service() -> build:
     """Get Google Calendar API service object."""
     SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
     SERVICE_ACCOUNT_FILE = "credentials.json"
+    SERVICE_ACCOUNT_FILE_PATH = get_file_path(SERVICE_ACCOUNT_FILE)
 
     credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+        SERVICE_ACCOUNT_FILE_PATH, scopes=SCOPES
     )
 
     service = build("calendar", "v3", credentials=credentials)
@@ -132,10 +133,10 @@ def update_json_alarm_schedule(events: Dict[str, Event]) -> Optional[Dict[str, E
         return None
 
 
-def get_script_path() -> str:
+def get_file_path(file_name: str) -> str:
     """Get the absolute path of the alarm.py script."""
     current_file_path = os.path.abspath(__file__)
-    script_path = os.path.join(os.path.dirname(current_file_path), "alarm.py")
+    script_path = os.path.join(os.path.dirname(current_file_path), file_name)
     return script_path
 
 
@@ -160,7 +161,7 @@ def convert_to_system_timezone(dt: datetime, calendar_tz_str: str) -> datetime:
 def set_cron_job(alarm_time: datetime):
     """Set a cron job to run the alarm script at the specified time."""
     cron = CronTab(user=True)  # Create a new cron job
-    job = cron.new(command=f"/usr/bin/python3 {get_script_path()}")
+    job = cron.new(command=f"/usr/local/bin/python3 {get_file_path("alarm.py")} >> /proc/1/fd/1 2>> /proc/1/fd/2")
 
     # `alarm_time`から時刻を設定
     job.minute.on(alarm_time.minute)
@@ -175,7 +176,7 @@ def set_cron_job(alarm_time: datetime):
 def remove_cron_jobs():
     """Remove all cron jobs that run the alarm script."""
     cron = CronTab(user=True)
-    cron.remove_all(command=f"/usr/bin/python3 {get_script_path()}")
+    cron.remove_all(command=f"/usr/local/bin/python3 {get_file_path()} >> /proc/1/fd/1 2>> /proc/1/fd/2")
     cron.write()
 
 
