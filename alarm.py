@@ -3,7 +3,7 @@ import os
 import random
 from main import get_file_path
 import re
-from flask import Flask, request, Response
+from flask import Flask
 from functools import wraps
 import sys
 
@@ -59,21 +59,13 @@ def play_random_alarm(music_directory):
     else:
         print("MP3 files not found in the music directory.")
 
-def shutdown_server():
-    """Flaskアプリケーションを終了させるための関数"""
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
 def after_function_shutdown(func):
     """元の関数が実行された後にFlaskサーバーをシャットダウンするデコレータ"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)  # 元の関数を実行
-        shutdown_server()  # 関数実行後にサーバーをシャットダウン
         sys.exit(0)  # サーバーがシャットダウンした後にプロセスを終了
-        return result
     return wrapper
 
 @app.route('/stop', methods=['GET'])
