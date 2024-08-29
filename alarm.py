@@ -3,13 +3,7 @@ import os
 import random
 from main import get_file_path
 import re
-from flask import Flask
-from functools import wraps
-import sys
-
-process = None # 音楽再生プロセスを保持する変数
-
-app = Flask(__name__)
+import requests
 
 def get_audio_device():
     # `aplay -l`の出力を取得
@@ -60,19 +54,12 @@ def play_random_alarm(music_directory):
         print("MP3 files not found in the music directory.")
 
 
-@app.route('/stop', methods=['GET'])
-def stop():
-    global process
-    if process and process.poll() is None:  # プロセスが実行中かチェック
-        process.terminate()  # プロセスを停止
-        process.wait()  # プロセスが完全に終了するのを待つ
-        process = None # プロセスをリセット
-        sys.exit(0)
-        return "Music stopped and server shutting down."
-    return "No music is playing."
-
-if __name__ == "__main__":
+def play_sound():
     music_directory = get_file_path("music")
     process = play_random_alarm(music_directory)
-    app.run(host='0.0.0.0', port=5000)
+    return process
 
+if __name__ == "__main__":
+    response = requests.get("http://localhost:5000/play")
+    print(response.text)
+    
