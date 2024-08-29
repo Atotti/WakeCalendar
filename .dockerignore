@@ -3,3 +3,4 @@ __pycache__/
 .git/
 .venv/
 *.log
+alarm_schedule.json
