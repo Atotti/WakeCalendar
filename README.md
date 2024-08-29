@@ -6,7 +6,16 @@ Googleカレンダーから目覚ましをセットするアプリケーショ�
 This is a application that set alarms for you based on google calendar events.
 
 You can set your alarm on google calendar like this:
-![image](https://github.com/user-attachments/assets/772b5046-bf28-44ec-adae-a3fb6eb900d4)
+<div style="text-align: center;">
+<img src="https://github.com/user-attachments/assets/772b5046-bf28-44ec-adae-a3fb6eb900d4"/>
+</div>
+
+And you can stop alarm to send get request to `{raspberry pi ipadress}:5000/stop`.
+I think add smart phone home is one of good way like this:
+<div style="text-align: center;">
+<img src="https://github.com/user-attachments/assets/f35359e1-3322-4b6e-aef6-35b79afd409d" style="width: 20%" />
+</div>
+
 
 ## How to use
 
