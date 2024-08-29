@@ -84,7 +84,7 @@ Requires=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker run --rm  -p 5000:5000 --device /dev/snd:/dev/snd -v {/path/to/host/directory}/alarm_schedule.json:/app/data/alarm_schedule.json wake-calendar:latest
+ExecStart=/usr/bin/docker run --rm --name wake-calendar -p 5000:5000 --device /dev/snd:/dev/snd -v {/path/to/host/directory}/alarm_schedule.json:/app/data/alarm_schedule.json wake-calendar:latest
 ExecStop=/usr/bin/docker stop wake-calendar
 
 [Install]
