@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 
-CMD ["sh", "-c", "python setup.py && cron && tail -f /dev/null"]
+CMD ["sh", "-c", "cron && python setup.py"]
