@@ -142,8 +142,8 @@ def get_file_path(file_name: str) -> str:
 
 def get_start_datetime(event: Event) -> Tuple[datetime, str]:
     """Get the start datetime and timezone of the event."""
-    date_time = event.start.get('dateTime')
-    time_zone = event.start.get("timeZone")
+    date_time = event.get('start').get('dateTime')
+    time_zone = event.get('start').get("timeZone")
     dt = parser.isoparse(date_time)
     return dt, time_zone
 
