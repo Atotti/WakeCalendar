@@ -60,12 +60,17 @@ def get_service() -> build:
 def get_events(service) -> List[Event]:
     """Get all events from Google Calendar."""
     calendar_id = os.environ.get("CALENDAR_ID")
-    now = datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
+    now = datetime.utcnow()
+    now_iso = now.isoformat() + "Z"  # 'Z' indicates UTC time
+
+    twelve_hours_later = now + timedelta(hours=12)
+    twelve_hours_later_iso = twelve_hours_later.isoformat() + "Z"
     events_result = (
         service.events()
         .list(
             calendarId=calendar_id,
-            timeMin=now,
+            timeMin=now_iso,
+            timeMax=twelve_hours_later_iso,
             maxResults=10,
             singleEvents=True,
             orderBy="startTime",
